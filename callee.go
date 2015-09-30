@@ -79,6 +79,7 @@ func consumeRequest() *MyMsg {
 		//log.Printf("sleeping 1 sec")
 		//time.Sleep(1 * time.Duration(time.Second))
 
+		q.ChangeMaxInFlight(0)
 		message.Finish()
 
 		ch <- &mm
