@@ -50,17 +50,19 @@ func consumeRequest() *MyMsg {
 		panic(err)
 	}
 
-	// if we make Conns exported, no difference.
-	conns := q.Conns()
-	rdy := 1
-	for _, conn := range conns {
-		err := conn.WriteCommand(nsq.Ready(rdy))
-		if err != nil {
-			panic(err)
+	// if we make Conns exported, no difference. i.e. there
+	// is no difference if we comment in/out the following code:
+	/*
+		conns := q.Conns()
+		rdy := 1
+		for _, conn := range conns {
+			err := conn.WriteCommand(nsq.Ready(rdy))
+			if err != nil {
+				panic(err)
+			}
+			rdy = 0 // only the first conn gets RDY=1, the rest get RDY=0
 		}
-		rdy = 0 // only the first conn gets RDY=1, the rest get RDY=0
-	}
-
+	*/
 	q.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
 		//log.Printf("Got a message: %#v", message)
 
