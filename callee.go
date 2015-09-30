@@ -63,6 +63,9 @@ func consumeRequest() *MyMsg {
 			rdy = 0 // only the first conn gets RDY=1, the rest get RDY=0
 		}
 	*/
+
+	q.ChangeMaxInFlight(1)
+
 	q.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
 		//log.Printf("Got a message: %#v", message)
 
