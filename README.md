@@ -6,8 +6,13 @@ to receive exactly one message when there are two messages queued in a channel.
 
 Protocol to reproduce:
 
+
+
 ~~~
-shell#1: start nsqd
+shell#1: build, then start nsqd
+$ make
+go build -o caller caller.go
+go build -o callee callee.go
 $ nsqd --lookupd-tcp-address=127.0.0.1:4160 &
 
 shell#2: start 1st caller
