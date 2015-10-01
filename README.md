@@ -8,7 +8,7 @@ Basic produce request, consume reply over nsq. What we learned:
 See also https://gist.github.com/glycerine/cbdd58e889b8805a7101
 and the original https://gist.github.com/joshrotenberg/5a3acb44d3dbad884397
 
-1. To avoid having a callee consume more than one message, per Jehiah's recommendations:
+2. To avoid having a callee consume more than one message, per Jehiah's recommendations:
 
 > On Wednesday, September 30, 2015 at 11:00:32 AM UTC-7, Jehiah wrote:
 Typically you do all processing before calling Finish, and at that 
