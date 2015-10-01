@@ -25,7 +25,10 @@ func main() {
 
 func produceReply(mm *MyMsg) {
 	config := nsq.NewConfig()
-	w, _ := nsq.NewProducer("127.0.0.1:4150", config)
+	w, err := nsq.NewProducer("127.0.0.1:4150", config)
+	if err != nil {
+		panic(err)
+	}
 
 	jsonBytes, err := json.Marshal(mm)
 	if err != nil {
@@ -79,7 +82,8 @@ func consumeRequest() *MyMsg {
 		//log.Printf("sleeping 1 sec")
 		//time.Sleep(1 * time.Duration(time.Second))
 
-		q.ChangeMaxInFlight(0)
+		//q.ChangeMaxInFlight(0)
+		q.Stop()
 		message.Finish()
 
 		ch <- &mm
@@ -92,6 +96,7 @@ func consumeRequest() *MyMsg {
 	}
 
 	mm2 := <-ch
+	<-q.StopChan
 
 	fmt.Printf("stats = %#v\n", q.Stats())
 

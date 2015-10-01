@@ -31,7 +31,7 @@ func getUniqReplyAddress() string {
 	if err != nil {
 		panic(err)
 	}
-	return fmt.Sprintf("caller-call-number-%x", a[:])
+	return fmt.Sprintf("caller-call-number-%x#ephemeral", a[:])
 }
 
 func produceRequest(replyTo string) {
@@ -62,10 +62,13 @@ func consumeReply(addrRepliedTo string) *MyMsg {
 	ch := make(chan *MyMsg)
 
 	config := nsq.NewConfig()
-	q, err := nsq.NewConsumer(addrRepliedTo, "ch", config)
+	q, err := nsq.NewConsumer(addrRepliedTo, "ch#ephemeral", config)
 	if err != nil {
 		panic(err)
 	}
+
+	q.ChangeMaxInFlight(1)
+
 	q.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
 		//log.Printf("Got a message: %#v", message)
 
@@ -77,6 +80,8 @@ func consumeReply(addrRepliedTo string) *MyMsg {
 
 		log.Printf("caller: Got a message Body (as MyMsg): %#v", mm)
 
+		//q.ChangeMaxInFlight(0)
+		q.Stop()
 		message.Finish()
 		//message.Requeue(1)
 
